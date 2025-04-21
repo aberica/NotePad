@@ -25,7 +25,7 @@ Q7. CSP와 MSP에 대한 설명으로 적절하지 않은 것은?
 A7. CSP는 클라우드 서비스를 관리할 MSP 사업을 병행해야 한다. -> CSP와 MSP는 독립적이다.  
   
 ### Cloud Service Models
-| 구분         | 사용자가 담당하는 영역              | CSP가 담당하는 영역              |
+| 구분         | 사용자가 담당하는 영역            | CSP가 담당하는 영역            |
 |--------------|-----------------------------------|---------------------------------|
 | On-premises  | Application, Platform, Infra      | X                               |
 | IaaS         | Application, Platform             | Infra                           |
@@ -34,3 +34,10 @@ A7. CSP는 클라우드 서비스를 관리할 MSP 사업을 병행해야 한다
  - Application: Application, Data
  - Platform: Runtime, Middleware, OS
  - Infra: Virtualization, Server, Storage, Network
+
+
+
+|범주 | 정보1 | 정보2|
+|-|-|-|
+|한승윤|가나다라마바|사|
+|홍길동|가|나다라마바사|  
