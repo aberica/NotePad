@@ -30,13 +30,39 @@ A7. CSP는 클라우드 서비스를 관리할 MSP 사업을 병행해야 한다
 | On-premises  | Application, Platform, Infra      | X                               |
 | IaaS         | Application, Platform             | Infra                           |
 | PaaS         | Application,                      | Platform, Infra                 |
-| SaaS         | X                                 | Application, Platform, Infra    |
+| SaaS         | X                                 | Application, Platform, Infra    | 
  - Application: Application, Data
  - Platform: Runtime, Middleware, OS
- - Infra: Virtualization, Server, Storage, Network
+ - Infra: Virtualization, Server, Storage, Network  
 
+### Models of Cloud Service Deployment
+- Public Cloud: Trhid-party cloud service provider가 cloud resources를 소유 및 실행. e.g) AWS  
+- Private Cloud: Cloud services used by a single organization, not exposed to public.  
+- Hybrid Cloud: 두 종류 섞은 것. e.g) Oracle의 DRCC
 
+Q8. 크라우드 서비스 유형에 대한 설명으로 적절하지 않은 것은?
+A8. PaaS를 활용하는 경우 어플리케이션에 대한 관리 및 유지보수는 CSP에서 수행하기 때문에 사용자의 관리 범위에 해당하지 않는다. -> PaaS에서 App에 대한 관리 및 유지보수는 User의 책임이다.  
 
-|범주 | 정보1 | 정보2|  
-|-|-|-|
-|한승윤|가나다라마바|사|
+Q9. 클라우드 배포 유형에 대해 적절하지 않은 것을 고르시오.
+A9. 클라우드 배포 유형은 크게 Public Cloud, Private Cloud, Hybird Cloud 유형으로 나눌 수 있으며, 동일한 서비스 구성 요소를 고려할 경우, Private Cloud 유형이 가장 비용 효율적이다. -> 동일 조건에서 Public Cloud가 가장 비용 효율적이다.  
+
+# Storage
+### Block Stroage
+Block Storage	엘리베이터가 많은 창고	- 데이터를 고정 크기의 블록 단위로 쪼개어 저장
+- 각 블록은 독립적으로 저장되고, 고유 주소로 접근
+- 계층 구조(폴더) 없이 빠른 접근 및 수정 가능
+- 고성능·저지연이 필요한 데이터베이스, 가상머신 등에 적합
+- 예시: SAN, 클라우드 EBS
+- 비유 보완: 여러 엘리베이터가 있어 원하는 물건(데이터 블록)을 가장 빠른 경로로 바로 꺼낼 수 있음
+File Storage	엘리베이터가 있는 창고	- 데이터를 파일 단위로 폴더(디렉터리) 구조에 저장
+- 파일명과 경로로 접근, 계층적으로 관리
+- 문서, 이미지 등 일반적인 파일 저장에 적합
+- 여러 사용자가 파일을 공유하거나 협업할 때 유용
+- 예시: NAS, 윈도우/리눅스 파일 서버
+- 비유 보완: 엘리베이터(파일 시스템)를 타고 폴더(층)를 찾아가서 파일을 꺼냄. 창고가 커질수록 폴더 구조가 복잡해짐
+Object Storage	벌판에 있는 아주 넓은 창고	- 데이터를 오브젝트(객체) 단위로 저장, 각 오브젝트는 데이터+메타데이터+고유 ID로 구성
+- 폴더나 계층 구조 없이 평면적으로 저장(벌판처럼 넓고 구획 없음)
+- 대용량 비정형 데이터(이미지, 동영상, 백업 등)에 최적
+- REST API 등으로 접근, 확장성 매우 뛰어남
+- 예시: AWS S3, Azure Blob Storage
+- 비유 보완: 넓은 벌판에 물건을 아무 데나 두고, 고유 ID로 위치를 찾음. 창고가 아무리 넓어도 빠르게 검색 가능
