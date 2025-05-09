@@ -1,0 +1,10 @@
+다음주(2025.05.16) 스터디 문제 공유드립니다.
+
+[Code Tree] 여왕 개미
+https://www.codetree.ai/ko/frequent-problems/problems/queen-ant/description
+
+[Code Tree] 코드트리 DB
+https://www.codetree.ai/ko/frequent-problems/problems/codetree-db/description
+
+[SW Expert Academy 15874] 흑돌과 백돌
+https://swexpertacademy.com/main/code/problem/problemDetail.do?contestProbId=AYTA4fnqJHIDFARs
