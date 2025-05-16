@@ -17,7 +17,7 @@ int changable_area[STATION_NUM - 1][2];
 ChangeInfo changable_candi[(MAX_ALLOC - HOUSE_NUM / STATION_NUM) * STATION_NUM * (STATION_NUM - 1)];		// 40'000
 
 namespace debug {
-	bool debug = true;
+	bool debug = false;
 	void PrintStatus(double station[]) {
 		if (!debug) return;
 		printf("station   - %lf %lf %lf %lf %lf\n", station[0], station[1], station[2], station[3], station[4]);
