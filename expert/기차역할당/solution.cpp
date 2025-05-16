@@ -17,11 +17,24 @@ int changable_area[STATION_NUM - 1][2];
 ChangeInfo changable_candi[(MAX_ALLOC - HOUSE_NUM / STATION_NUM) * STATION_NUM * (STATION_NUM - 1)];		// 40'000
 
 namespace debug {
-	bool debug = false;
+	bool debug = true;
 	void PrintStatus(double station[]) {
 		if (!debug) return;
 		printf("station   - %lf %lf %lf %lf %lf\n", station[0], station[1], station[2], station[3], station[4]);
-		printf("alloc_num - %d %d %d %d %d\n\n", alloc_num[0], alloc_num[1], alloc_num[2], alloc_num[3], alloc_num[4]);
+		printf("alloc_num - %d %d %d %d %d\n", alloc_num[0], alloc_num[1], alloc_num[2], alloc_num[3], alloc_num[4]);
+	}
+	void PrintScore(const double house[], double station[], short alloc[]) {
+		if (!debug) return;
+		double score = 0;
+		for (int i = 0; i < HOUSE_NUM; ++i) {
+			double dist = house[i] - station[alloc[i]];
+			score += dist >= 0 ? dist : -dist;
+		}
+		printf("score	- %lf\n", score);
+	}
+	void PrintLine() {
+		if (!debug) return;
+		printf("---------------------------------------------------\n");
 	}
 };
 
@@ -94,6 +107,12 @@ void AllocStation2Avg(const double house[], short alloc[], double station[]) {
 	for (int i = 0; i < HOUSE_NUM; i++) pos_sum[alloc[i]] += house[i];
 
 	for (int i = 0; i < STATION_NUM; i++) station[i] = pos_sum[i] / alloc_num[i];
+}
+void AllocStation2Med(const double house[], short alloc[], double station[]) {
+	for (int i = 0, sum = 0; i < STATION_NUM; i++) {
+		station[i] = house[sum + alloc_num[i] / 2];
+		sum += alloc_num[i];
+	}
 }
 short GetCloserStation(double pos, int idx, double station[], double& dist_diff) {
 	double dist_1 = station[idx] - pos;
@@ -193,14 +212,17 @@ void test(const double house[], double station[], short alloc[]) {
 	Init(salloc);
 
 	while (1) {
-		// 2. 그룹의 평균에 station 위치시키기
-		AllocStation2Avg(shouse, salloc, station);
+		// 2. 그룹의 중앙값에 station 위치시키기
+		// AllocStation2Avg(shouse, salloc, station);
+		AllocStation2Med(shouse, salloc, station);		// DEBUG 평균이 아니라 중앙값이 되어야 한다!!!!!
 		debug::PrintStatus(station);
-
+		debug::PrintScore(shouse, station, salloc);
 
 		// 3. 경계선에 있는 house들 그룹 바꿀껀지 결정
 		bool group_changed = ChangeGroup(shouse, station, salloc);
 		debug::PrintStatus(station);
+		debug::PrintScore(shouse, station, salloc);
+		debug::PrintLine();
 		if (!group_changed) break;
 	}
 
@@ -230,5 +252,7 @@ void test(const double house[], double station[], short alloc[]) {
 
 /*
 * [브루트 포스] 3시간 20분
-* seed: 5 - score: 518'842.134353
+* seed: 5 - score: 518'842.134353		<< 그룹이 평균에 기차역 위치
+* seed: 5 - score: 517532.190300		<< 그룹이 중앙값에 기차역 위치
+* 
 */
