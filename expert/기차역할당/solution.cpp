@@ -251,7 +251,7 @@ void test(const double house[], double station[], short alloc[]) {
 */
 
 /*
-* [브루트 포스] 3시간 20분
+* [브루트 포스] 4시간 +a
 * seed: 5 - score: 518'842.134353		<< 그룹이 평균에 기차역 위치
 * seed: 5 - score: 517'532.190300		<< 그룹이 중앙값에 기차역 위치
 * seed: 5 - score: 508'414.744900		<< 중앙값 & 뒤에서부터 바꾸기
