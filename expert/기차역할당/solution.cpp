@@ -186,11 +186,11 @@ void QuickSort(ChangeInfo change_candi[], int low, int high) {
 	}
 }
 bool ChangeGroup(const double house[], double station[], short alloc[]) {
-	// 바꿀 house들을 우선 찾기만 한 뒤, score감소가 큰 놈부터 앞에 오게 정렬 후, 앞에서부터 바꾸기
+	// 바꿀 house들을 우선 찾기만 한 뒤, score감소를 기준으로 정렬 후, 뒤에서부터 바꾸기
 	bool group_changed = false;
 	int candi_size = FindChangableCandi(house, station, alloc, changable_candi);
 	QuickSort(changable_candi, 0, candi_size - 1);
-	for (int i = 0; i < candi_size; i++) {
+	for (int i = candi_size - 1; i >= 0; i--) {			// DEBUG 뒤에서부터 바꾸기 !!!!!
 		if (alloc_num[changable_candi[i].to] >= MAX_ALLOC) continue;
 		alloc_num[changable_candi[i].to]++;
 		alloc_num[changable_candi[i].from]--;
@@ -253,6 +253,6 @@ void test(const double house[], double station[], short alloc[]) {
 /*
 * [브루트 포스] 3시간 20분
 * seed: 5 - score: 518'842.134353		<< 그룹이 평균에 기차역 위치
-* seed: 5 - score: 517532.190300		<< 그룹이 중앙값에 기차역 위치
-* 
+* seed: 5 - score: 517'532.190300		<< 그룹이 중앙값에 기차역 위치
+* seed: 5 - score: 508'414.744900		<< 중앙값 & 뒤에서부터 바꾸기
 */
