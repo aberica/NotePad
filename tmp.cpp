@@ -1,40 +1,96 @@
-#include <iostream>
-#include <vector>
-#define MAX_N 1010
-using namespace std;
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
-int T, N;
-int line[MAX_N][2];
+#include <stdio.h>
 
-void Input() {
-    cin >> N;
-    
-    for (int from = 0; from < N; from++) {
-        line[from][0] = line[from][1] = 0;
-    }
+extern void init(int N, int K, int mId[], int sCity[], int eCity[], int mToll[]);
+extern void add(int mId, int sCity, int eCity, int mToll);
+extern void remove(int mId);
+extern int calculate(int sCity, int eCity);
 
-    for (int from = 0; from < N; from++) {
-        for (int to = from+1; to < N; to++) {
-            int color; cin >> color;
-            line[from][color]++;
-            line[to][color]++;
-        }
-    }
-}
-int CalCnt() {
-    int cnt = 0;
-    for (int from = 0; from < N; from++) {
-        cnt += line[from][0] * line[from][1];
-    }
-    int all_cases = N * (N-1) * (N-2) / 6;
-    return all_cases - cnt / 2;
+/////////////////////////////////////////////////////////////////////////
+
+#define MAX_K 5000
+#define CMD_INIT 100
+#define CMD_ADD 200
+#define CMD_REMOVE 300
+#define CMD_CALC 400
+
+static bool run() {
+	int q;
+	scanf("%d", &q);
+
+	int n, k;
+	int mIdArr[MAX_K], sCityArr[MAX_K], eCityArr[MAX_K], mTimeArr[MAX_K];
+	int mId, sCity, eCity, mTime;
+	int cmd, ans, ret = 0;
+	bool okay = false;
+
+	for (int i = 0; i < q; ++i) {
+		scanf("%d", &cmd);
+		switch (cmd) {
+			case CMD_INIT:
+				okay = true;
+				scanf("%d %d", &n, &k);
+				for (int j = 0; j < k; ++j) {
+					scanf("%d %d %d %d", &mIdArr[j], &sCityArr[j], &eCityArr[j], &mTimeArr[j]);
+				}
+				init(n, k, mIdArr, sCityArr, eCityArr, mTimeArr);
+				break;
+			case CMD_ADD:
+				scanf("%d %d %d %d", &mId, &sCity, &eCity, &mTime);
+				add(mId, sCity, eCity, mTime);
+				break;
+			case CMD_REMOVE:
+				scanf("%d", &mId);
+				remove(mId);
+				break;
+			case CMD_CALC:
+				scanf("%d %d %d", &sCity, &eCity, &ans);
+				ret = calculate(sCity, eCity);
+				if (ans != ret)
+					okay = false;
+				break;
+			default:
+				okay = false;
+				break;
+		}
+	}
+	return okay;
 }
 
 int main() {
-    cin >> T;
-    while(T--) {
-        Input();
-        cout << CalCnt() << endl;
-    }
-    return 0;
+	setbuf(stdout, NULL);
+	//freopen("sample_input.txt", "r", stdin);
+
+	int T, MARK;
+	scanf("%d %d", &T, &MARK);
+
+	for (int tc = 1; tc <= T; tc++) {
+		int score = run() ? MARK : 0;
+		printf("#%d %d\n", tc, score);
+	}
+
+	return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////
+//    제출 시 이 윗 부분은 변경없이 그대로 제출해야 합니다. 
+/////////////////////////////////////////////////////////////////////////
+
+void init(int N, int K, int mId[], int sCity[], int eCity[], int mTime[]) {
+	return;
+}
+
+void add(int mId, int sCity, int eCity, int mTime) {
+	return;
+}
+
+void remove(int mId) {
+	return;
+}
+
+int calculate(int sCity, int eCity) {
+	return 0;
 }
