@@ -215,9 +215,7 @@ int calculate(int sCity, int eCity, int expected = -1) {
 		}
 		roads[mId].destroied = false;
 
-		if (road_not_exist) {
-			return -1;
-		}
+		if (road_not_exist) return -1;
 	}
 	if (second_info.city == -1) return -1;
 
@@ -242,5 +240,9 @@ mTime: 도로의 소요 시간 ( 1 ≤ mTime ≤ 1,000 )
 3. 각 테스트 케이스에서 remove() 함수의 호출 횟수는 500 이하이다.
 4. 각 테스트 케이스에서 calculate() 함수의 호출 횟수는 200 이하이다.
 
-
+오답노트
+1. 다익스트라 vistied 사용 -> dist를 사용해야. 그리고 값 업데이트와 조건문continue 위치 정정
+2. second_info는 최대값을 구함에 주의. 가는 길이 없을 경우 -1을 return 해야
+3. 길을 임의로 하나씩 삭제하고 복구할 때, 길을 복구하고 나서 road_not_exist일때 return -1을 해줘야
+4. 추가발전방안 : node_trace를 저장하여, 길을 없앤 부분부터 탐색을 시작하여 second_info를 구할 때, 아는 길로 접어들었을 경우 더이상 계산 X하는 방법. 근데 이거 노드방문한지 안한지, 세심한 주의가 필요해 보임.
 */
