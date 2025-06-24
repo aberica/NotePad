@@ -7,7 +7,7 @@
 extern void init(int N, int K, int mId[], int sCity[], int eCity[], int mToll[]);
 extern void add(int mId, int sCity, int eCity, int mToll);
 extern void remove(int mId);
-extern int calculate(int sCity, int eCity);
+extern int calculate(int sCity, int eCity, int expected);
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +48,7 @@ static bool run() {
 			break;
 		case CMD_CALC:
 			scanf("%d %d %d", &sCity, &eCity, &ans);
-			ret = calculate(sCity, eCity);
+			ret = calculate(sCity, eCity, ans);
 			if (ans != ret)
 				okay = false;
 			break;
@@ -62,7 +62,7 @@ static bool run() {
 
 int main() {
 	setbuf(stdout, NULL);
-	//freopen("sample_input.txt", "r", stdin);
+	freopen("sample_input.txt", "r", stdin);
 	//freopen("ss.txt", "r", stdin);
 
 	int T, MARK;
@@ -83,7 +83,7 @@ int main() {
 #include <map>
 #include <queue>
 #define CITY_MAX 1'000
-#define MAX 2100000000
+#define INF 2100000000
 using namespace std;
 
 struct Edge {
@@ -104,11 +104,12 @@ struct Node {
 };
 struct Info {
 	int city, tme;
-	vector<int> trace;
+	vector<int> city_trace, road_trace;
 
 	Info(int _city = -1, int _tme = -1) : city(_city), tme(_tme) {
-		trace.clear();
-		trace.push_back(_city);
+		city_trace.clear();
+		city_trace.push_back(_city);
+		road_trace.clear();
 	}
 	bool operator<(const Info& other) const {
 		return tme > other.tme;
@@ -116,13 +117,11 @@ struct Info {
 };
 
 vector<Node> cities;
-int road_mId[CITY_MAX][CITY_MAX];
 map<int, Edge> roads;
 
 void init(int N, int K, int mId[], int sCity[], int eCity[], int mTime[]) {
 	cities.clear();
 	roads.clear();
-	memset(road_mId, -1, sizeof(road_mId));
 	for (int i = 0; i < N; i++) cities.push_back(Node(i));
 	for (int i = 0; i < K; i++) add(mId[i], sCity[i], eCity[i], mTime[i]);
 	return;
@@ -139,86 +138,91 @@ void add(int mId, int sCity, int eCity, int mTime) {
 	roads[mId] = Edge(mId, sCity, eCity, mTime);
 	cities[sCity].out_roads.push_back(&roads[mId]);
 	cities[eCity].in_roads.push_back(&roads[mId]);
-	road_mId[sCity][eCity] = mId;
 	return;
 }
 
 void remove(int mId) {
 	roads[mId].destroied = true;
-	road_mId[roads[mId].from][roads[mId].to] = -1;
 	return;
 }
 
-int calculate(int sCity, int eCity) {
-	bool visited[CITY_MAX] = { false, };
+int calculate(int sCity, int eCity, int expected = -1) {
+	int dist[CITY_MAX];
 	priority_queue<Info> pq;
-	pq.push(Info(sCity, 0));
-	visited[sCity] = true;
 
-	Info first_info(-1, -1);
+	fill(dist, dist + CITY_MAX, INF);
+	dist[sCity] = 0;
+	pq.push(Info(sCity, 0));
+	Info first_info(-1, INF);
 	while (!pq.empty()) {
 		Info u = pq.top();
 		pq.pop();
+		if (u.tme > dist[u.city]) continue;
 
 		if (u.city == eCity) {
-			first_info = u;
-			break;
+			if (u.tme < first_info.tme) first_info = u;
+			continue;
 		}
 
 		for (auto road : cities[u.city].out_roads) {
 			if (road->destroied) continue;
-			if (visited[road->to] == true) continue;
-			visited[road->to] = true;
+			if (dist[road->to] <= u.tme + road->tme) continue;
+			dist[road->to] = u.tme + road->tme;
 
 			Info v(u);
-			v.city = road->to, v.tme += road->tme, v.trace.push_back(road->to);
+			v.city = road->to, v.tme += road->tme, v.city_trace.push_back(road->to), v.road_trace.push_back(road->id);
 			pq.push(v);
 		}
 	}
-	if (first_info.tme == -1) return -1;
+	if (first_info.city == -1) return -1;
 
-	int visit_order[CITY_MAX];
-	memset(visit_order, -1, sizeof(visit_order));
-	for (auto i = 0; i < first_info.trace.size(); i++) {
-		visit_order[first_info.trace[i]] = i;
+	int city_order[CITY_MAX];
+	fill(city_order, city_order + CITY_MAX, -1);
+	for (auto i = 0; i < first_info.city_trace.size(); i++) {
+		city_order[first_info.city_trace[i]] = i;
 	}
 
+
 	Info second_info(-1, -1);
-	for (auto i = 0; i < first_info.trace.size() - 1; i++) {
-		int mId = road_mId[first_info.trace[i]][first_info.trace[i + 1]];
+	for (auto mId: first_info.road_trace) {
 		roads[mId].destroied = true;
 
-		memset(visited, false, sizeof(visited));
+		fill(dist, dist + CITY_MAX, INF);
+		dist[sCity] = 0;
 		while (!pq.empty()) pq.pop();
 		pq.push(Info(sCity, 0));
-		visited[sCity] = true;
-
+		bool road_not_exist = true;
 		while (!pq.empty()) {
 			Info u = pq.top();
 			pq.pop();
+			if (u.tme > dist[u.city]) continue;
 
 			if (u.city == eCity) {
-				if (second_info.tme < u.tme) second_info = u;
-				break;
+				if (u.tme > second_info.tme) second_info = u;
+				road_not_exist = false;
+				continue;
 			}
-
+			
 			for (auto road : cities[u.city].out_roads) {
 				if (road->destroied) continue;
-				if (visited[road->to] == true) continue;
-				visited[road->to] = true;
+				if (dist[road->to] <= u.tme + road->tme) continue;
+				dist[road->to] = u.tme + road->tme;
 
 				Info v(u);
-				v.city = road->to, v.tme += road->tme, v.trace.push_back(road->to);
+				v.city = road->to, v.tme += road->tme, v.city_trace.push_back(road->to), v.road_trace.push_back(road->id);
 				pq.push(v);
 			}
 		}
-
 		roads[mId].destroied = false;
+
+		if (road_not_exist) {
+			return -1;
+		}
 	}
-	if (second_info.tme == -1) return -1;
+	if (second_info.city == -1) return -1;
 
 	int output = second_info.tme - first_info.tme;
-	printf("  output: %d / %d - %d\n", output, second_info.tme, first_info.tme);
+	//printf("  Expected: %d, Output: %d / %d - %d\n", expected, output, second_info.tme, first_info.tme);
 	return output;
 }
 
