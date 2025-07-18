@@ -178,7 +178,7 @@ def fix_index(
     passing_count = 0
     delete_indices = []
     for i, cur in enumerate(structured_body):
-        if passing_count is not 0:
+        if passing_count != 0:
             passing_count -= 1
             delete_indices.append(i)
             continue
@@ -190,13 +190,13 @@ def fix_index(
         )
         if not is_table_inner:
             continue
-        if cur.clientInfo.rowAddr is not 1 or cur.clientInfo.colAddr is not 1:
+        if cur.clientInfo.rowAddr != 1 or cur.clientInfo.colAddr != 1:
             continue
 
         table_name = cur.clientInfo.parentObjectName
         n_row = structured_shared[table_name].nRow
         n_col = structured_shared[table_name].nCol
-        if n_row is not 1:
+        if n_row != 1:
             continue
         if cur.contents.text.startswith(tuple(map(str, range(1, 10)))):
             continue
@@ -234,9 +234,9 @@ def is_subtitle(cur: BodyElement, nxt: BodyElement, markers: Dict[str, int], sub
     cur_rank = nxt_rank = 0
 
     # 가운데 정렬 vs 그 외 정렬
-    if cur.clientInfo.paraShape and cur.clientInfo.paraShape.paraAlign is 'JUSTIFY':
+    if cur.clientInfo.paraShape and cur.clientInfo.paraShape.paraAlign == 'JUSTIFY':
         cur_rank += 10000
-    if nxt.clientInfo.paraShape and nxt.clientInfo.paraShape.paraAlign is 'JUSTIFY':
+    if nxt.clientInfo.paraShape and nxt.clientInfo.paraShape.paraAlign == 'JUSTIFY':
         nxt_rank += 10000
 
     # 목차부호
@@ -335,7 +335,7 @@ def build_final_json_blocks(
 
         if is_table_outer:
             table_name = cur.clientInfo.containObjects[0].objectName
-            current_table = [[""]*structured_shared[table_name].nRow for _ in range(structured_shared[table_name].nCol)]
+            current_table = [[""]*structured_shared[table_name].nCol for _ in range(structured_shared[table_name].nRow)]
 
         if text == "":
             continue  # 빈 텍스트는 무시
